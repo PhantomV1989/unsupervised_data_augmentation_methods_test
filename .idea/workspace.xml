@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8810b11b-c5e1-427e-bfff-54a419611798" name="Default Changelist" comment="" />
+    <list default="true" id="8810b11b-c5e1-427e-bfff-54a419611798" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/arr.csv" beforeDir="false" afterPath="$PROJECT_DIR$/arr.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_wrangling_tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_wrangling_tools.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,22 +21,24 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="1377" />
+          <entry key="py" value="8395" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="1377" />
+          <entry key="Python" value="8395" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="1" />
+          <entry key="csv" value="1" />
+          <entry key="py" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="1" />
+          <entry key="PLAIN_TEXT" value="1" />
+          <entry key="Python" value="4" />
         </counts>
       </usages-collector>
     </session>
@@ -43,16 +48,57 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/data_wrangling_tools.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-55">
-              <caret line="339" lean-forward="true" selection-start-line="339" selection-end-line="339" />
+            <state relative-caret-position="1765">
+              <caret line="485" column="86" lean-forward="true" selection-start-line="485" selection-start-column="8" selection-end-line="485" selection-end-column="86" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
+                <element signature="e#966#1132#0" />
+                <element signature="e#1041#1112#0" />
+                <element signature="e#1187#1392#0" />
+                <element signature="e#1457#2008#0" />
+                <element signature="e#1507#1660#0" />
+                <element signature="e#1551#1660#0" />
+                <element signature="e#1679#1984#0" />
+                <element signature="e#1716#1784#0" />
+                <element signature="e#1811#1984#0" />
+                <element signature="e#1859#1984#0" />
+                <element signature="e#2474#3147#0" />
+                <element signature="e#2679#2919#0" />
+                <element signature="e#2925#2976#0" />
+                <element signature="e#3064#3127#0" />
+                <element signature="e#4512#4601#0" />
+                <element signature="e#4898#5368#0" />
+                <element signature="e#4959#5314#0" />
+                <element signature="e#5108#5245#0" />
+                <element signature="e#5405#5505#0" />
+                <element signature="e#5524#5872#1" />
+                <element signature="e#6052#6152#0" />
+                <element signature="e#6189#6453#0" />
+                <element signature="e#6772#6951#0" />
+                <element signature="e#6931#6946#0" />
+                <element signature="e#8060#8623#0" />
+                <element signature="e#8914#9047#0" />
+                <element signature="e#12774#13071#0" />
+                <marker date="1542183106977" expanded="true" signature="11405:11919" ph="..." />
+                <marker date="1542183106977" expanded="true" signature="12001:14393" ph="..." />
+                <marker date="1542183106977" expanded="true" signature="17642:17652" ph="..." />
+                <marker date="1542183106977" expanded="true" signature="18538:18862" ph="..." />
+                <marker date="1542183106977" expanded="true" signature="19141:19146" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>callb</find>
+      <find>np.where</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -62,13 +108,14 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="260" />
-    <option name="y" value="20" />
-    <option name="width" value="1400" />
-    <option name="height" value="1000" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="816" />
+    <option name="height" value="576" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
-    <navigator proportions="" version="1">
+    <navigator currentView="Scope" currentSubView="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope" proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
@@ -83,11 +130,21 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="Scope">
+        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
+          <expand>
+            <path>
+              <item name="test" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -144,19 +201,18 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17913593" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Python Console" />
+      <window_info anchor="bottom" id="Python Console" weight="0.329718" />
       <window_info anchor="bottom" id="Terminal" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3991323" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.40455532" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -169,33 +225,19 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/data_wrangling_tools.py</url>
-          <line>364</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/data_wrangling_tools.py</url>
-          <line>362</line>
-          <option name="timeStamp" value="37" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="np.asarray([[x[2]] for x in max_loss_c])" language="Python" />
-        <watch expression="max(loss_a)" language="Python" />
-        <watch expression="max(loss_b)" language="Python" />
-        <watch expression="max(loss_c)" language="Python" />
-        <watch expression="plt.plot(x, loss_a, 'r--', x, loss_b, 'b--')" language="Python" />
-        <watch expression="np.savetxt('optimization_max_loss_results_for_DOPE',np.asarray(max_loss_d))" language="Python" />
+        <watch expression="np.savetxt('losses_max_loss.csv', np.asarray([loss_a, loss_b, loss_c]), delimiter=',')" language="Python" />
       </configuration>
     </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="breakpointCondition">
+      <expression>
+        <expression-string>_first_loop</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>mx==1</expression-string>
         <language-id>Python</language-id>
@@ -204,27 +246,47 @@
     </expressions>
     <expressions id="watch">
       <expression>
-        <expression-string>np.savetxt('optimization_max_loss_results_for_DOPE',np.asarray(max_loss_d))</expression-string>
+        <expression-string>np.savetxt('losses_max_loss.csv', np.asarray([loss_a, loss_b, loss_c]), delimiter=',')</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.asarray([[x[2]] for x in max_loss_c])</expression-string>
+        <expression-string>plt.plot(x, loss_a, 'r--', x, loss_c, 'g--')</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.savetxt('optimization_max_loss_results_for_DOPE',np.asarray(max_loss_c))</expression-string>
+        <expression-string>plt.plot(x, loss_a, 'r--', x, loss_b, 'b--', x, loss_c, 'g--')</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.savetxt('optimization_max_loss_results_for_reverse_dist',np.asarray(max_loss_b))</expression-string>
+        <expression-string>np.savetxt('losses_best_standard_deviation.csv', np.asarray([loss_a, loss_b, loss_c]), delimiter=',')</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.savetxt('max_loss_reverse_dist',np.asarray(max_loss_b))</expression-string>
+        <expression-string>results[best_pos][1]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>results[best_pos][1]['best interval']=best_intervals</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>results[best_pos]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>np.std(loss_b)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>np.max(loss_b)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -233,23 +295,18 @@
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
+    </expressions>
+    <expressions id="setValue">
       <expression>
-        <expression-string>plt.plot(x, loss_b, 'g--')</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>plt.plot(x, loss_c, 'b--', x, loss_b, 'g--')</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>plt.plot(x, loss_b, 'b--', x, loss_c, 'g--')</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>max(loss_c)</expression-string>
+        <expression-string>{'T': array([[0, 1]], dtype=int64), 'base': None, 'ctypes': &lt;numpy.core._internal._ctypes object at 0x000001D0E609C080&gt;, 'data': &lt;memory at 0x000001D0CEB9FDC8&gt;, 'dtype': dtype('int64'), 'flags':   C_CONTIGUOUS : True
+  F_CONTIGUOUS : True
+  OWNDATA : True
+  WRITEABLE : True
+  ALIGNED : True
+  WRITEBACKIFCOPY : False
+  UPDATEIFCOPY : False, 'flat': &lt;numpy.flatiter object at 0x000001D0CB569890&gt;, 'imag': array([[0],
+       [0]], dtype=int64), 'itemsize': 8, 'nbytes': 16, 'ndim': 2, 'real': array([[0],
+       [1]], dtype=int64), 'shape': (2, 1), 'size': 2, 'strides': (8, 8)}</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -263,12 +320,61 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/arr.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/keras/callbacks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="278">
+          <caret line="516" column="40" lean-forward="true" selection-start-line="513" selection-start-column="8" selection-end-line="516" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/data_wrangling_tools.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-55">
-          <caret line="339" lean-forward="true" selection-start-line="339" selection-end-line="339" />
+        <state relative-caret-position="1765">
+          <caret line="485" column="86" lean-forward="true" selection-start-line="485" selection-start-column="8" selection-end-line="485" selection-end-column="86" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#966#1132#0" />
+            <element signature="e#1041#1112#0" />
+            <element signature="e#1187#1392#0" />
+            <element signature="e#1457#2008#0" />
+            <element signature="e#1507#1660#0" />
+            <element signature="e#1551#1660#0" />
+            <element signature="e#1679#1984#0" />
+            <element signature="e#1716#1784#0" />
+            <element signature="e#1811#1984#0" />
+            <element signature="e#1859#1984#0" />
+            <element signature="e#2474#3147#0" />
+            <element signature="e#2679#2919#0" />
+            <element signature="e#2925#2976#0" />
+            <element signature="e#3064#3127#0" />
+            <element signature="e#4512#4601#0" />
+            <element signature="e#4898#5368#0" />
+            <element signature="e#4959#5314#0" />
+            <element signature="e#5108#5245#0" />
+            <element signature="e#5405#5505#0" />
+            <element signature="e#5524#5872#1" />
+            <element signature="e#6052#6152#0" />
+            <element signature="e#6189#6453#0" />
+            <element signature="e#6772#6951#0" />
+            <element signature="e#6931#6946#0" />
+            <element signature="e#8060#8623#0" />
+            <element signature="e#8914#9047#0" />
+            <element signature="e#12774#13071#0" />
+            <marker date="1542183106977" expanded="true" signature="11405:11919" ph="..." />
+            <marker date="1542183106977" expanded="true" signature="12001:14393" ph="..." />
+            <marker date="1542183106977" expanded="true" signature="17642:17652" ph="..." />
+            <marker date="1542183106977" expanded="true" signature="18538:18862" ph="..." />
+            <marker date="1542183106977" expanded="true" signature="19141:19146" ph="..." />
           </folding>
         </state>
       </provider>

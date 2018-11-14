@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from keras.models import Sequential, Model, Input
+from keras.models import Sequential, Model, Input, clone_model
 from keras.optimizers import Adam
 from keras.layers import Dense
 from keras.callbacks import EarlyStopping
@@ -32,13 +32,13 @@ def maxpool_sampling(data, sampling_interval):
     return new_data
 
 
-def split_data(X, Y, split_ratio):  # 0.000026s
+def split_data(X, split_ratio):  # 0.000026s
     if len(X) != len(Y):
         print('Data set not of same size')
         return
     dLen = len(X)
     aLen = int(dLen * split_ratio)
-    output = (X[:aLen], Y[:aLen]), (X[aLen:], Y[aLen:])
+    output = (X[:aLen], X[aLen:])
     return output
 
 
@@ -59,15 +59,6 @@ def random_sampling(X, Y, sample_size, replacement=True):
                 X_new.append(X.pop(rng))
                 Y_new.append(Y.pop(rng))
     return X_new, Y_new
-
-
-def _get_bin_pos(v, bin_rng, return_bin_range=False):
-    if v < bin_rng[0]:
-        return [0, [bin_rng[0], bin_rng[1]]] if return_bin_range else 0
-    for i in range(len(bin_rng) - 1):
-        if v >= bin_rng[i] and v < bin_rng[i + 1]:
-            return [i, [bin_rng[i], bin_rng[i + 1]]] if return_bin_range else i
-    return [i, [bin_rng[-2], bin_rng[-1]]] if return_bin_range else i
 
 
 def transform_data_to_uniform_dist(data, bins=30, retain_size=True):
@@ -94,7 +85,7 @@ def transform_data_to_uniform_dist(data, bins=30, retain_size=True):
     return new_data
 
 
-def transform_1D_data_to_reverse_dist(data, no_of_new_samples=0, return_same_sized_combined_dist=True, bins=30,
+def transform_1D_data_to_reverse_dist(data, no_of_new_samples=False, return_same_sized_combined_dist=True, bins=30,
                                       imba_f=1.2,
                                       show_visualization=True):
     # instead of making rare events having the same standing as frequent events, we make rare events even more common than norm
@@ -102,6 +93,10 @@ def transform_1D_data_to_reverse_dist(data, no_of_new_samples=0, return_same_siz
 
     # if no_of_new_samples is not specified, it attempts to calculate the number by finding the amount of new samples
     # required to fill up the remaining area of the uniform dist (think of it as the unfilled area of a rectangle'
+    if not no_of_new_samples and no_of_new_samples != 0:
+        no_of_new_samples = np.sum(np.max(count) - count)
+    if no_of_new_samples == 0 or imba_f == 0:
+        return data
 
     latent_dim = 1
     feature_count = len(data[0])
@@ -133,9 +128,6 @@ def transform_1D_data_to_reverse_dist(data, no_of_new_samples=0, return_same_siz
     if bins > len(latent_values):
         bins = int(len(latent_values) / 2)
     count, ranges = np.histogram(latent_values, bins=bins)
-
-    if no_of_new_samples == 0:
-        no_of_new_samples = np.sum(np.max(count) - count)
 
     bins_probability_table = [np.power(x, imba_f) for x in np.rint(max(count) - count) / max(count)]
     bins_probability_table /= np.max(bins_probability_table)
@@ -202,6 +194,9 @@ def transform_1D_data_to_reverse_dist(data, no_of_new_samples=0, return_same_siz
 
 
 def transform_1D_samples_using_DOPE(data, return_same_sized_combined_dist=True, new_sample_ratio=0.3, no_of_std=3):
+    if new_sample_ratio == 0 or no_of_std == 0:
+        return data
+
     latent_dim = 1
     no_of_new_samples = int(len(data) * new_sample_ratio)
     feature_count = len(data[0])
@@ -269,101 +264,229 @@ def transform_1D_samples_using_DOPE(data, return_same_sized_combined_dist=True, 
     return new_data
 
 
+def for_looper(loop_function, loops_start_end_step, tensorify_result=False, _argv=[], _first_loop=True):
+    #  loops_start_end_int = [[loop1_start,loop1_end,loop1_int],[loop2_start,loop2_end,loop2_int]]
+    #  tensorify result, returns result as a tensor, ONLY WORKS WITH NUMBERS!!
+    # DO NOT INITIALIZE argv!!!!, for recursive purposes
+    start, end, step = loops_start_end_step[0]
+    interval_values = np.arange(start, end, step)
+
+    loop_results = []
+    if _argv == []:
+        _argv = [0 for x in range(len(loops_start_end_step))]
+    for i in interval_values:
+        argv_new = np.copy(_argv).astype(float)
+        argv_new[len(_argv) - len(loops_start_end_step)] = i
+        if len(loops_start_end_step) == 1:
+            loop_results.append([argv_new, loop_function(argv_new)])
+        else:
+            loop_results += for_looper(loop_function=loop_function, loops_start_end_step=loops_start_end_step[1:],
+                                       _argv=argv_new, _first_loop=False)
+    if _first_loop and tensorify_result:
+        tensor_positions_flattened = [x[0] for x in loop_results]
+        loop_results_flattened = [x[1] for x in loop_results]
+
+        dim_intervals = [np.arange(x[0], x[1], x[2]) for x in loops_start_end_step]
+        steps_count_for_each_dim = [len(x) for x in dim_intervals]
+        basic_tensor = np.zeros(steps_count_for_each_dim)
+        result_tensor = np.copy(basic_tensor)
+
+        tensor_positions_flattened_mapped = []
+        for ele in tensor_positions_flattened:
+            tensor_positions_flattened_mapped.append(
+                [list(np.where(dim_intervals[i] == e)[0])[0] for i, e in enumerate(ele)])
+
+        for i, mapped_pos in enumerate(tensor_positions_flattened_mapped):
+            result_tensor[tuple(mapped_pos)] = loop_results_flattened[i]
+
+        tensor_pos_interval_map = list(
+            map(lambda x, y, z: [x, y, z], tensor_positions_flattened_mapped, tensor_positions_flattened,
+                loop_results_flattened))
+        return result_tensor, tensor_pos_interval_map
+
+    return loop_results
+
+
+class Hidden:
+    @staticmethod
+    def get_bin_pos(v, bin_rng, return_bin_range=False):
+        if v < bin_rng[0]:
+            return [0, [bin_rng[0], bin_rng[1]]] if return_bin_range else 0
+        for i in range(len(bin_rng) - 1):
+            if bin_rng[i] <= v < bin_rng[i + 1]:
+                return [i, [bin_rng[i], bin_rng[i + 1]]] if return_bin_range else i
+        return [i, [bin_rng[-2], bin_rng[-1]]] if return_bin_range else i
+
+    @staticmethod
+    def parse_numpy_where_results(np_where_results):
+        return np.asarray(np_where_results).transpose()[0]
+
+
+class Optimisers:
+    @staticmethod
+    def n_ary_search_optimization(score_function, search_space_argvs, search_resolution=3, convergence_limit=0.01,
+                                  max_iteration=3,
+                                  opti_obj='min', search_beyond_original_space=False):
+        # score_function MUST return a dict with key 'score'
+        # search space is an array of max,mins to used with score_function, eg [[x1min,x1max],[x2min,x2max]]
+        # type is 'AUC' if wants a cluster of best extremas or 'best' for a single best extrema
+
+        if opti_obj == 'min':
+            obj_fn, rv_obj_rn = np.min, np.max
+        elif opti_obj == 'max':
+            obj_fn, rv_obj_rn = np.max, np.min
+        else:
+            raise TypeError('Please use "min" or "max" for opti_obj.')
+
+        start_end_step_array = []
+        for space in search_space_argvs:
+            start, end = space
+            step = (end - start) / search_resolution
+            start_end_step_array.append([start, end, step])
+
+        results = for_looper(score_function, loops_start_end_step=start_end_step_array,
+                             tensorify_result=False)
+        scores = [x[1]['score'] for x in results]
+        best_score = obj_fn(scores)
+        worst_score = rv_obj_rn(scores)
+
+        best_pos = Hidden.parse_numpy_where_results(np.where(scores == best_score))[0]
+        best_intervals = results[best_pos][0]
+
+        if np.abs(best_score - worst_score) <= convergence_limit or max_iteration == 0:
+            if max_iteration == 0:
+                print('Max iter reached.')
+            else:
+                print('Results converged.')
+            output = results[best_pos][1]
+            output['best interval'] = best_intervals
+            return results[best_pos][1]
+
+        new_steps = [x[2] / 2 for x in start_end_step_array]
+
+        new_max_space = best_intervals + new_steps
+        new_min_space = best_intervals - new_steps
+
+        if not search_beyond_original_space:
+            new_max_space = [new_max_space[i] if new_max_space[i] < x[1] else x[1] for i, x in
+                             enumerate(start_end_step_array)]
+            new_min_space = [new_min_space[i] if new_min_space[i] > x[0] else x[0] for i, x in
+                             enumerate(start_end_step_array)]
+
+        new_search_space = [[new_min_space[i], new_max_space[i]] for i, x in enumerate(new_max_space)]
+
+        return Optimisers.n_ary_search_optimization(score_function=score_function, search_space_argvs=new_search_space,
+                                                    search_resolution=search_resolution,
+                                                    max_iteration=max_iteration - 1,
+                                                    convergence_limit=convergence_limit, opti_obj=opti_obj,
+                                                    search_beyond_original_space=search_beyond_original_space)
+
+
 # tests
-def test_x():
-    print('Test X')
-    arr = []
-    s = np.sin
+class Tests:
+    @staticmethod
+    def test_for_looper():
+        def loop_test(x):
+            output = ''
+            for i in x:
+                output += str(i) + ','
+            print(output)
+            return np.random.rand()
 
-    for i in range(1000):
-        v = s(i * 0.2)
-        if i % 13 == 0:
-            v += np.random.rand()
-        if i % 20 == 0:
-            v -= np.random.rand()
-        if i % np.random.randint(12, 30) == 0:
-            v += np.random.rand()
-        arr.append(v)
-    plt.figure('Sample time series data')
-    plt.plot(arr)
-    # plt.show()
-    np.savetxt('arr.csv', arr, delimiter=',')
-    new_arr = create_sliding_window(arr, window_size=10)
-    x = np.asarray(new_arr)
+        result = for_looper(loop_test, [[1, 5, 0.7], [20, 30, 2], [100, 200, 25.6]], tensorify_result=True)
+        return result
 
-    def create_model(x_input):
-        model = Sequential()
-        model.add(Dense(units=50, input_shape=(x_input.shape[1],)))
-        model.add(Dense(units=20))
-        model.add(Dense(units=50))
-        model.add(Dense(x_input.shape[1]))
-        model.compile(loss='mean_squared_error', optimizer='adam', metrics=['mse'])
-        return model
+    @staticmethod
+    def test_x():
+        print('Test X')
+        arr = []
+        s = np.sin
 
-    def get_loss(model, x, y, type='mean'):
-        # type = {'mean', 'max'}
-        y_ = model.predict(np.asarray(x))
-        if type == 'mean':
-            return np.mean(np.abs(np.add(y_, -y)), axis=1)
-        elif type == 'max':
-            return np.asarray([np.max(q) for q in np.abs(np.add(y_, -y))])
-        return
+        for i in range(1000):
+            v = s(i * 0.2)
+            if i % 13 == 0:
+                v += np.random.rand()
+            if i % 20 == 0:
+                v -= np.random.rand()
+            if i % np.random.randint(12, 30) == 0:
+                v += np.random.rand()
+            arr.append(v)
+        plt.figure('Sample time series data')
+        plt.plot(arr)
+        # plt.show()
+        np.savetxt('arr.csv', arr, delimiter=',')
+        new_arr = create_sliding_window(arr, window_size=10)
+        x = np.asarray(new_arr)
 
-    def helper(x):
-        model_a = create_model(x)
-        np.random.shuffle(x)
-        early_stopping = EarlyStopping(monitor='loss', min_delta=0.0001)
-        history = model_a.fit(x=x, y=x, batch_size=int(len(x) / 10), epochs=500, callbacks=[early_stopping])
-        loss = get_loss(model_a, x=x, y=x, type='max')
-        return loss
+        def create_model(x_input):
+            model = Sequential()
+            model.add(Dense(units=50, input_shape=(x_input.shape[1],)))
+            model.add(Dense(units=20))
+            model.add(Dense(units=50))
+            model.add(Dense(x_input.shape[1]))
+            model.compile(loss='mean_squared_error', optimizer='adam', metrics=['mse'])
+            return model
 
-    # original loss
-    loss_a = helper(x)
+        def get_loss(model, x, y, type='mean'):
+            # type = {'mean', 'max'}
+            y_ = model.predict(np.asarray(x))
+            if type == 'mean':
+                return np.mean(np.abs(np.add(y_, -y)), axis=1)
+            elif type == 'max':
+                return np.asarray([np.max(q) for q in np.abs(np.add(y_, -y))])
+            return
 
-    # loss with optimized 'distribution reversal' sampling
-    max_loss_b = []
-    best_loss_b = 0
+        def helper(x):
+            model_a = create_model(x)
+            np.random.shuffle(x)
+            early_stopping = EarlyStopping(monitor='loss', min_delta=0.0001)
+            history = model_a.fit(x=x, y=x, batch_size=int(len(x) / 10), epochs=500, callbacks=[early_stopping])
+            loss = get_loss(model_a, x=x, y=x, type='max')
+            return loss
 
-    for i in range(3, 10, 1):
-        for j in range(1, 10, 1):
-            f = i / 10
-            size = int(len(x) * j / 10)
-            new_x = transform_1D_data_to_reverse_dist(x, no_of_new_samples=size, return_same_sized_combined_dist=True,
-                                                      imba_f=f, show_visualization=False)
+        # original loss
+        loss_a = helper(x)
+
+        # loss with optimized 'distribution reversal' sampling
+        def reverse_dist_looper_wrapper(input):
+            size = input[0]
+            imba_factor = input[1]
+            new_x = transform_1D_data_to_reverse_dist(x, no_of_new_samples=size,
+                                                      return_same_sized_combined_dist=True,
+                                                      imba_f=imba_factor, show_visualization=False)
             loss_b = helper(np.asarray(new_x))
-            max_loss_b.append([f, size, np.max(loss_b)])
-            if i == 1:
-                best_loss_b = loss_b
-            elif np.max(loss_b) <= np.min([x[2] for x in max_loss_b]):
-                best_loss_b = loss_b
-    loss_b = best_loss_b
+            loss_std = np.max(loss_b)
+            return {'score': loss_std, 'loss': loss_b}
 
-    # loss with optimized 'DOPE' sampling
-    # may not be optimized efficiently because there is more than just 1 parameter for optimization
-    max_loss_c = []
-    best_loss_c = 0
-    for i in range(1, 10, 1):
-        for j in range(1, 4):
-            f = i / 10
-            std = j
-            new_x_doped = transform_1D_samples_using_DOPE(x, return_same_sized_combined_dist=True, new_sample_ratio=f,
+        scores_b = Optimisers.n_ary_search_optimization(score_function=reverse_dist_looper_wrapper,
+                                                        convergence_limit=0.05,
+                                                        search_space_argvs=[[0, 2], [0, 2]], search_resolution=4)
+        loss_b = scores_b['loss']
+
+        # loss with optimized 'DOPE' sampling
+        def DOPE_sampling_wrapper(input):
+            new_sample_ratio = input[0]
+            std = input[1]
+            new_x_doped = transform_1D_samples_using_DOPE(x, return_same_sized_combined_dist=True,
+                                                          new_sample_ratio=new_sample_ratio,
                                                           no_of_std=std)
             loss_c = helper(np.asarray(new_x_doped))
-            max_loss_c.append([f, std, np.max(loss_c)])
-            if i == 1:
-                best_loss_c = loss_c
-            elif np.max(loss_c) <= np.min([x[2] for x in max_loss_c]):
-                best_loss_c = loss_c
-    loss_c = best_loss_c
+            loss_std = np.max(loss_c)
+            return {'score': loss_std, 'loss': loss_c}
 
-    x = np.arange(len(loss_a))
-    plt.figure(2)
-    plt.plot(x, loss_a, 'r--', x, loss_b, 'b--', x, loss_c, 'g--')
-    plt.show()
-    np.savetxt('losses2.csv', np.asarray([loss_a, loss_b, loss_c]), delimiter=',')
+        scores_c = Optimisers.n_ary_search_optimization(score_function=DOPE_sampling_wrapper,
+                                                        convergence_limit=0.05,
+                                                        search_space_argvs=[[0, 2], [0, 2]], search_resolution=4)
+        loss_c = scores_c['loss']
 
-    return
+        x = np.arange(len(loss_a))
+        plt.figure(2)
+        plt.plot(x, loss_a, 'r--', x, loss_b, 'b--', x, loss_c, 'g--')
+        plt.show()
+        np.savetxt('losses2.csv', np.asarray([loss_a, loss_b, loss_c]), delimiter=',')
+
+        return
 
 
 if __name__ == '__main__':
-    test_x()
+    Tests.test_x()
